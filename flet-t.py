@@ -56,7 +56,7 @@ try:
 except: pass
 
 # === КОНФІГУРАЦІЯ ===
-APP_VERSION_NUM = "v14.13" # <--- ВИНОСИМО НОМЕР ВЕРСІЇ ОКРЕМО
+APP_VERSION_NUM = "v14.14" # <--- ВИНОСИМО НОМЕР ВЕРСІЇ ОКРЕМО
 APP_VERSION = f"ATR-TV ({APP_VERSION_NUM} Hotfix)"
 BG_COLOR = "#050505"
 ACCENT_CYAN = "#00F0FF"
@@ -1286,3 +1286,4 @@ if __name__ == "__main__":
     
 
     ft.app(target=main, assets_dir=assets_path)
+
