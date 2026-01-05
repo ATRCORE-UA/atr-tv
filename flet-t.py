@@ -51,12 +51,12 @@ def force_window_icon(window_title, icon_path):
     except: pass
 
 try:
-    app_id = 'atrtv.player.v14.13'
+    app_id = 'atrtv.player'
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
 except: pass
 
 # === КОНФІГУРАЦІЯ ===
-APP_VERSION_NUM = "v14.14" # <--- ВИНОСИМО НОМЕР ВЕРСІЇ ОКРЕМО
+APP_VERSION_NUM = "v14.13" # <--- ВИНОСИМО НОМЕР ВЕРСІЇ ОКРЕМО
 APP_VERSION = f"ATR-TV ({APP_VERSION_NUM} Hotfix)"
 BG_COLOR = "#050505"
 ACCENT_CYAN = "#00F0FF"
@@ -167,7 +167,7 @@ def main(page: ft.Page):
         {"key": "idle_enabled", "label": "Анімація очікування", "type": "bool"},
         {"key": "fullscreen", "label": "Режим відображення", "type": "action_toggle"},
         {"key": "provider", "label": "Провайдер", "type": "info", "value": "ATR-TV (Locked)"},
-        {"key": "app_ver", "label": "Версія", "type": "ver", "value": "ATR-TV Player (v14.13)"},
+        {"key": "app_ver", "label": "Версія", "type": "ver", "value": "ATR-TV Player (" + APP_VERSION_NUM + ")"},
         {"key": "reset", "label": "СКИНУТИ НАЛАШТУВАННЯ", "type": "action_red"},
         {"key": "logout", "label": "ВИЙТИ З АКАУНТУ", "type": "action_red"}
     ]
