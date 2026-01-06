@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ATR-TV | Оновлення системи</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- ГЛОБАЛЬНІ НАЛАШТУВАННЯ --- */
+        :root {
+            --bg-color: #0B0D17;
+            --accent-cyan: #00F0FF;
+            --accent-magenta: #BC13FE;
+            --accent-green: #00ff9d;
+            --accent-red: #ff4757;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        html { scroll-behavior: smooth; }
+        
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-white);
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* --- ФОН --- */
+        .glow-bg {
+            position: fixed;
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, var(--accent-magenta) 0%, transparent 70%);
+            opacity: 0.15;
+            top: -20%;
+            right: -20%;
+            filter: blur(100px);
+            z-index: -1;
+        }
+        
+        .glow-bg-2 {
+            position: fixed;
+            width: 90vw;
+            height: 90vw;
+            background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+            opacity: 0.1;
+            bottom: -20%;
+            left: -30%;
+            filter: blur(120px);
+            z-index: -1;
+        }
+
+        /* --- PRELOADER --- */
+        .loader-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .loader-container.hidden { opacity: 0; visibility: hidden; }
+        .loader-content { text-align: center; }
+        .loader-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 36px;
+            color: var(--text-white);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        .loader-logo span { color: var(--accent-cyan); }
+        .loader-bar {
+            width: 0%; height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            margin: 15px auto 0;
+            border-radius: 2px;
+            animation: load-bar 1.5s ease-in-out forwards;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(0, 240, 255, 0.2); transform: scale(1); }
+            50% { text-shadow: 0 0 20px rgba(0, 240, 255, 0.6); transform: scale(1.02); }
+        }
+        @keyframes load-bar {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* --- MAIN CARD --- */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .update-card {
+            background: rgba(11, 13, 23, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: slide-up 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .update-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+        }
+
+        @keyframes slide-up {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .icon-box {
+            width: 80px; height: 80px;
+            background: var(--glass-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        .icon-box svg {
+            width: 40px; height: 40px;
+            fill: var(--accent-cyan);
+            filter: drop-shadow(0 0 5px var(--accent-cyan));
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            margin: 0 0 10px;
+            background: linear-gradient(90deg, #fff, #ccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-msg {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* --- VERSION COMPARISON --- */
+        .version-compare {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .ver-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .ver-label { font-size: 10px; text-transform: uppercase; color: var(--text-gray); letter-spacing: 1px; }
+        .ver-num { font-family: 'Montserrat'; font-weight: 700; font-size: 18px; }
+        
+        .ver-old .ver-num { color: var(--accent-red); text-decoration: line-through; opacity: 0.7; }
+        .ver-new .ver-num { color: var(--accent-green); text-shadow: 0 0 10px rgba(0, 255, 157, 0.3); }
+
+        .arrow-icon { color: var(--text-gray); font-size: 18px; }
+
+        /* --- RELEASE NOTES --- */
+        .notes-container {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .notes-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .notes-text {
+            font-size: 14px;
+            color: #ddd;
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+        /* --- BUTTON --- */
+        .btn-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, var(--accent-cyan), #00aaff);
+            color: #000;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-size: 16px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer; /* Додано, щоб було видно, що клікабельно */
+        }
+
+        .btn-download.disabled {
+            background: #555;
+            color: #888;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
+        }
+
+        .btn-download::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .error-box {
+            color: var(--accent-red);
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+            background: rgba(255, 71, 87, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="loader-container">
+        <div class="loader-content">
+            <div class="loader-logo">ATR<span>-TV</span></div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <div class="glow-bg"></div>
+    <div class="glow-bg-2"></div>
+
+    <div class="container">
+        <div class="update-card">
+            
+            <div class="icon-box">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 16L7 11H10V4H14V11H17L12 16ZM2 20V18H22V20H2Z" />
+                </svg>
+            </div>
+
+            <h1>Доступне оновлення</h1>
+            
+            <p class="status-msg" id="status-text">
+                Перевірка версії...
+            </p>
+
+            <div class="version-compare">
+                <div class="ver-box ver-old">
+                    <span class="ver-label">Поточна</span>
+                    <span class="ver-num" id="ver-old">...</span>
+                </div>
+                <div class="arrow-icon">→</div>
+                <div class="ver-box ver-new">
+                    <span class="ver-label">Нова</span>
+                    <span class="ver-num" id="ver-new">...</span>
+                </div>
+            </div>
+
+            <div class="notes-container">
+                <div class="notes-title">Що нового?</div>
+                <p class="notes-text" id="notes-content">Завантаження інформації...</p>
+            </div>
+
+            <a href="#" class="btn-download" id="download-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Завантажити оновлення
+            </a>
+
+            <div class="error-box" id="error-msg"></div>
+
+            <div class="footer">ATR-TV Mobile Systems &copy; 2026</div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Отримуємо дані з URL (після #)
+        function getHashParams() {
+            // Якщо хешу немає взагалі, повертаємо порожній об'єкт
+            if (!window.location.hash) return {};
+            
+            const hash = window.location.hash.substring(1); 
+            const params = {};
+            
+            hash.split('&').forEach(part => {
+                const item = part.split('=');
+                if (item.length === 2) {
+                    params[item[0]] = decodeURIComponent(item[1]);
+                }
+            });
+            return params;
+        }
+
+        // 2. Головна логіка
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loader = document.querySelector('.loader-container');
+            const oldVerEl = document.getElementById('ver-old');
+            const newVerEl = document.getElementById('ver-new');
+            const notesEl = document.getElementById('notes-content');
+            const btnEl = document.getElementById('download-btn');
+            const errorEl = document.getElementById('error-msg');
+            const statusEl = document.getElementById('status-text');
+
+            // Парсимо URL
+            const urlParams = getHashParams();
+            const currentVersion = urlParams['vo'] || '?.??';
+            const updateVersion = urlParams['vu'] || '?.??';
+
+            // Відображаємо версії
+            oldVerEl.textContent = currentVersion;
+            newVerEl.textContent = updateVersion;
+            
+            // Оновлюємо текст статусу
+            statusEl.innerHTML = `Ваша версія <b style="color:#fff">${currentVersion}</b> застаріла.<br>Версія після оновлення: <b style="color:var(--accent-cyan)">${updateVersion}</b>`;
+
+            try {
+                // ВИКОРИСТОВУЄМО ПРЯМЕ API ПОСИЛАННЯ NPOINT
+                const jsonUrl = 'https://api.npoint.io/0e36ffb385699ffbd850';
+                
+                const response = await fetch(jsonUrl);
+                
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                
+                const data = await response.json();
+                console.log("Отримані дані:", data); // Для налагодження в консолі
+
+                // Заповнюємо дані
+                notesEl.innerHTML = data.notes || "Опис змін відсутній.";
+                
+                if (data['url-dwnl']) {
+                    btnEl.href = data['url-dwnl'];
+                } else {
+                    throw new Error("У JSON немає поля 'url-dwnl'");
+                }
+
+            } catch (error) {
+                console.error("Помилка:", error);
+                
+                notesEl.innerHTML = "Не вдалося завантажити список змін.<br>Перевірте інтернет з'єднання.";
+                notesEl.style.color = "#ff6b6b";
+                
+                errorEl.textContent = "Помилка зв'язку з сервером оновлень. Спробуйте пізніше.";
+                errorEl.style.display = "block";
+                
+                // Робимо кнопку неактивною або ставимо запасне посилання
+                // btnEl.classList.add('disabled');
+                btnEl.href = "https://github.com/ATRCORE-UA/atr-tv/releases/latest"; // Фолбек
+            }
+
+            // Прибираємо лоадер із затримкою
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
